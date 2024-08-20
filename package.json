@@ -1,0 +1,32 @@
+{
+  "name": "wiki-corpus-en",
+  "version": "1.0.0",
+  "description": "create corpus from Wikipedia in English",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "fix": "prettier --write . && eslint --fix .",
+    "lint": "prettier --check . && eslint .",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.3.0",
+    "eslint": "^9.3.0",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.3.0",
+    "prettier": "^3.2.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kazuma-naka/wiki-corpus-en.git"
+  },
+  "keywords": [
+    "corpus"
+  ],
+  "author": "Kazuma Naka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kazuma-naka/wiki-corpus-en/issues"
+  },
+  "homepage": "https://github.com/kazuma-naka/wiki-corpus-en#readme"
+}
