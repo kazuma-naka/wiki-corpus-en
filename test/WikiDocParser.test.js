@@ -1,13 +1,10 @@
 import { fileURLToPath } from "url";
 import path from "path";
 import { readFile } from "fs/promises";
-import { jest } from "@jest/globals";
 import WikiDocParser from "../WikiDocParser.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-jest.mock("fs/promises");
 
 describe("WikiDocParser", () => {
   test("Test titleAndContent", () => {
@@ -27,6 +24,20 @@ describe("WikiDocParser", () => {
     const mockData = await readFile(filePath, "utf8");
     const results = WikiDocParser.titleAndContent(mockData);
     expect(results.length).toEqual(7021);
-    expect(results[0].title).toEqual("AccessibleComputing");
+  });
+
+  test("Test titles from file", async () => {
+    const filePath = path.join(__dirname, "resources", "wiki-doc-test.txt");
+    const mockData = await readFile(filePath, "utf8");
+    const results = WikiDocParser.titleAndContent(mockData);
+    expect(results[0].title).toEqual("Accessible Computing");
+  });
+
+  test("Test contents from file", async () => {
+    const filePath = path.join(__dirname, "resources", "wiki-doc-test.txt");
+    const mockData = await readFile(filePath, "utf8");
+    const results = WikiDocParser.titleAndContent(mockData);
+    console.log(`content[1]: ${results[1].content}`);
+    expect(results[0].content).toEqual(null);
   });
 });
