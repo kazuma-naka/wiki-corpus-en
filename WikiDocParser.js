@@ -4,9 +4,11 @@ class WikiDocParser {
   static titleAndContent(text) {
     const docRegex = /<doc[^>]*title="([^"]*)">([^<]*)<\/doc>/g;
     const newlineRegex = /\r?\n|\r/g;
-    const symbolsRegex = /["',:]/g;
+    const symbolsRegex = /["',:;~]/g;
     const bracketRegex = /\s*\([^)]*\)\s*/g;
     const duplicateWordRegex = /\b(\w+)\1\b/g;
+    const laTexRegex = /formula_\d*/g;
+    const numberWithoutSpaceRegex = /(\d)to/g;
     try {
       const results = [];
       let match;
@@ -19,7 +21,10 @@ class WikiDocParser {
                 .replace(newlineRegex, "")
                 .replace(duplicateWordRegex, "$1")
                 .replace(bracketRegex, "")
-                .replace(symbolsRegex, "");
+                .replace(symbolsRegex, "")
+                .replace(laTexRegex, "")
+                .replace(numberWithoutSpaceRegex, `$1 to`)
+                .replace("albedowhere", "");
         results.push({ title, content });
       }
       return results;
@@ -62,7 +67,7 @@ class WikiDocParser {
       .reduce((obj, [key, value]) => {
         obj[key] = value;
         return obj;
-      }, {});
+      });
     return sortedNGrams;
   }
 }
