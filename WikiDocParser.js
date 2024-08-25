@@ -4,7 +4,7 @@ class WikiDocParser {
   static titleAndContent(text) {
     const docRegex = /<doc[^>]*title="([^"]*)">([^<]*)<\/doc>/g;
     const newlineRegex = /\r?\n|\r/g;
-    const quotesRegex = /["']/g;
+    const symbolsRegex = /["',:]/g;
     const bracketRegex = /\s*\([^)]*\)\s*/g;
     const duplicateWordRegex = /\b(\w+)\1\b/g;
     try {
@@ -17,9 +17,9 @@ class WikiDocParser {
             ? null
             : match[2]
                 .replace(newlineRegex, "")
-                .replace(duplicateWordRegex,"$1")
+                .replace(duplicateWordRegex, "$1")
                 .replace(bracketRegex, "")
-                .replace(quotesRegex, "");
+                .replace(symbolsRegex, "");
         results.push({ title, content });
       }
       return results;
@@ -35,6 +35,35 @@ class WikiDocParser {
       word.replace(/([a-z])([A-Z])/g, "$1 $2")
     );
     return processedWords.join(" ");
+  }
+
+  static createWordNGramsWithCount(text, n) {
+    const sentences = text
+      .split(".")
+      .filter((sentence) => sentence.trim() !== "");
+    let nGrams = {};
+    sentences.forEach((sentence) => {
+      const words = sentence
+        .trim()
+        .split(" ")
+        .filter((word) => word.trim() !== "");
+      for (let i = 0; i <= words.length - n; i++) {
+        const nGram = words.slice(i, i + n).join(" ");
+        if (nGrams[nGram]) {
+          nGrams[nGram]++;
+        } else {
+          nGrams[nGram] = 1;
+        }
+      }
+    });
+    const sortedNGrams = Object.entries(nGrams)
+      .filter(([key]) => isNaN(key))
+      .sort(([, a], [, b]) => b - a)
+      .reduce((obj, [key, value]) => {
+        obj[key] = value;
+        return obj;
+      }, {});
+    return sortedNGrams;
   }
 }
 
