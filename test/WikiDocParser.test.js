@@ -169,7 +169,7 @@ describe("WikiDocParser", () => {
     console.log("tri-gram size:", Object.keys(triGram).length);
   });
 
-  test("Test creating uni-gram from small test data and write it", async () => {
+  test.only("Test creating uni-gram from small test data and write it", async () => {
     const filePath = path.join(
       __dirname,
       "resources",
