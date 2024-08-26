@@ -34,6 +34,7 @@ describe("WikiDocParser", () => {
     expect(results[1].title).toEqual("Anarchism");
     expect(results[10].title).toEqual("Amoeboid Taxa");
     expect(results[17].title).toEqual("Albedo");
+    expect(results[58].title).toEqual("A");
   });
 
   test("Test contents from file", async () => {
@@ -60,6 +61,22 @@ describe("WikiDocParser", () => {
     const results = WikiDocParser.titleAndContent(mockData);
     expect(results[17].content).not.toBeNull();
     console.log(`Content of Albedo:\n`, results[17].content);
+  });
+
+  test("Test content[47] Albedo that has content", async () => {
+    const filePath = path.join(__dirname, "resources", "wiki-doc-test.txt");
+    const mockData = await readFile(filePath, "utf8");
+    const results = WikiDocParser.titleAndContent(mockData);
+    expect(results[47].content).not.toBeNull();
+    console.log(`Content of Albedo:\n`, results[47].content);
+  });
+
+  test("Test content[58] A that has content", async () => {
+    const filePath = path.join(__dirname, "resources", "wiki-doc-test.txt");
+    const mockData = await readFile(filePath, "utf8");
+    const results = WikiDocParser.titleAndContent(mockData);
+    expect(results[58].content).not.toBeNull();
+    console.log(`Content of A:\n`, results[58].content);
   });
 
   test("Test uni-gram from content[1] Anarchism", async () => {
@@ -102,7 +119,7 @@ describe("WikiDocParser", () => {
     console.log("uni-gram size:", Object.keys(uniGram).length);
   });
 
-  test.only("Test bi-gram from content[17] Albedo", async () => {
+  test("Test bi-gram from content[17] Albedo", async () => {
     const filePath = path.join(__dirname, "resources", "wiki-doc-test.txt");
     const mockData = await readFile(filePath, "utf8");
     const results = WikiDocParser.titleAndContent(mockData);
@@ -120,5 +137,53 @@ describe("WikiDocParser", () => {
     const triGram = WikiDocParser.createWordNGramsWithCount(testContent, 3);
     console.log("tri-gram content[17]:", triGram);
     console.log("tri-gram size:", Object.keys(triGram).length);
+  });
+
+  test("Test uni-gram from content[58] A", async () => {
+    const filePath = path.join(__dirname, "resources", "wiki-doc-test.txt");
+    const mockData = await readFile(filePath, "utf8");
+    const results = WikiDocParser.titleAndContent(mockData);
+    const testContent = results[58].content;
+    const uniGram = WikiDocParser.createWordNGramsWithCount(testContent, 1);
+    console.log("uni-gram content[58]:", uniGram);
+    console.log("uni-gram size:", Object.keys(uniGram).length);
+  });
+
+  test("Test bi-gram from content[58] A", async () => {
+    const filePath = path.join(__dirname, "resources", "wiki-doc-test.txt");
+    const mockData = await readFile(filePath, "utf8");
+    const results = WikiDocParser.titleAndContent(mockData);
+    const testContent = results[58].content;
+    const biGram = WikiDocParser.createWordNGramsWithCount(testContent, 2);
+    console.log("bi-gram content[58]:", biGram);
+    console.log("bi-gram size:", Object.keys(biGram).length);
+  });
+
+  test("Test tri-gram from content[58] A", async () => {
+    const filePath = path.join(__dirname, "resources", "wiki-doc-test.txt");
+    const mockData = await readFile(filePath, "utf8");
+    const results = WikiDocParser.titleAndContent(mockData);
+    const testContent = results[58].content;
+    const triGram = WikiDocParser.createWordNGramsWithCount(testContent, 3);
+    console.log("tri-gram content[58]:", triGram);
+    console.log("tri-gram size:", Object.keys(triGram).length);
+  });
+
+  test.only("Test creating uni-gram from test data", async () => {
+    const filePath = path.join(
+      __dirname,
+      "resources",
+      "wiki-doc-test-small.txt"
+    );
+    const mockData = await readFile(filePath, "utf8");
+    const results = WikiDocParser.titleAndContent(mockData);
+    const resultsContentNotNull = results.filter(
+      (wikiData) => wikiData.content !== null
+    );
+    const uniGram = resultsContentNotNull.map((wikiData) => {
+      return WikiDocParser.createWordNGramsWithCount(wikiData.content, 1);
+    });
+    const mergedUniGram = WikiDocParser.mergeObjectsFromArray(uniGram);
+    console.log(mergedUniGram);
   });
 });
