@@ -4,7 +4,9 @@ class WikiDocParser {
   static titleAndContent(text) {
     const docRegex = /<doc[^>]*title="([^"]*)">([^<]*)<\/doc>/g;
     const newlineRegex = /\r?\n|\r/g;
-    const symbolsRegex = /["',:;~?]/g;
+    const symbolsRegex = /[\\[\]"',:;~?()…\/*“”‘’]/g;
+    const symbolsRegexWithSpace = /[-!|#=+]/g;
+    const startWithAndRegex = /&\S+/g;
     const bracketRegex = /\s*\([^)]*\)\s*/g;
     const duplicateWordRegex = /\b(\w+)\1\b/g;
     const laTexRegex = /formula_\d*/g;
@@ -24,6 +26,8 @@ class WikiDocParser {
                 .replace(symbolsRegex, "")
                 .replace(laTexRegex, "")
                 .replace(numberWithoutSpaceRegex, `$1 to`)
+                .replace(symbolsRegexWithSpace, " ")
+                .replace(startWithAndRegex, "")
                 .replace("albedowhere", "")
                 .replace("AmericA", "America")
                 .replace("ActresseS", "Actresses")

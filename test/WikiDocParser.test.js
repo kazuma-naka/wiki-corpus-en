@@ -1,6 +1,6 @@
 import { fileURLToPath } from "url";
 import path from "path";
-import { readFile } from "fs/promises";
+import { writeFile, readFile, mkdir } from "fs/promises";
 import WikiDocParser from "../WikiDocParser.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -169,7 +169,7 @@ describe("WikiDocParser", () => {
     console.log("tri-gram size:", Object.keys(triGram).length);
   });
 
-  test.only("Test creating uni-gram from test data", async () => {
+  test("Test creating uni-gram from small test data and write it", async () => {
     const filePath = path.join(
       __dirname,
       "resources",
@@ -184,6 +184,9 @@ describe("WikiDocParser", () => {
       return WikiDocParser.createWordNGramsWithCount(wikiData.content, 1);
     });
     const mergedUniGram = WikiDocParser.mergeObjectsFromArray(uniGram);
-    console.log(mergedUniGram);
+    const json = JSON.stringify(mergedUniGram, null, 2);
+    const outFilePath = path.join(__dirname, "output", "test_output_small.txt");
+    await mkdir(path.dirname(outFilePath), { recursive: true });
+    await writeFile(outFilePath, json, "utf8");
   });
 });
